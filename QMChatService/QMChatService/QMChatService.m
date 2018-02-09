@@ -1898,8 +1898,8 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     NSDate *lastMessagesLoadDate = self.lastMessagesLoadDate[chatDialogID];
     QBChatMessage *lastMessage = [self.messagesMemoryStorage lastMessageFromDialogID:chatDialogID];
     
-    if (lastMessagesLoadDate == nil && lastMessage != nil) {
-        lastMessagesLoadDate = lastMessage.dateSent;
+    if (lastMessage != nil) {
+        lastMessagesLoadDate = lastMessage.dateSent;        
     }
     
     parameters[@"date_sent[gt]"] = @([lastMessagesLoadDate timeIntervalSince1970]);
