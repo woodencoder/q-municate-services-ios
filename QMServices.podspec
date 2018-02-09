@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
     s.license      = { :type => 'BSD', :file => 'LICENSE.txt' }
     s.authors      = {"Andrey Ivanov" => "andrey.ivanov@quickblox.com", "Vitaliy Gorbachov" => "vitaliy.gorbachov@quickblox.com", "Vitaliy Gurkovsky" => "vitaliy.gurkovsky@injoit.com"}
     s.platform     = :ios, "9.0"
-    s.source       = { :git => "https://github.com/QuickBlox/q-municate-services-ios.git", :tag => "#{s.version}"}
+    s.source       = { :git => "https://github.com/woodencoder/q-municate-services-ios.git", :tag => "#{s.version}"}
     s.source_files  = "Classes", "**/*.{h,m}"
     s.exclude_files = "Pods", "Frameworks"
     s.frameworks = "CoreData"
