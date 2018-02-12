@@ -767,6 +767,50 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     }
 }
 
+- (void)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID
+                                   customData:(NSDictionary<NSString *,id> *)data
+                                   completion:(void (^)(QBResponse *response, QBChatDialog *createdDialog))completion {
+    NSAssert(opponentID > 0, @"Incorrect user ID");
+    
+    QBChatDialog *localDialog = [self.dialogsMemoryStorage privateChatDialogWithOpponentID:opponentID];
+    
+    if (!localDialog) {
+        
+        QBChatDialog *newDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate];
+        newDialog.occupantIDs = @[@(opponentID)];
+        newDialog.data = data;
+        
+        __weak __typeof(self)weakSelf = self;
+        
+        [QBRequest createDialog:newDialog successBlock:^(QBResponse *response, QBChatDialog *createdDialog) {
+            
+            [weakSelf.dialogsMemoryStorage addChatDialog:createdDialog andJoin:NO completion:nil];
+            
+            if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogToMemoryStorage:)]) {
+                [weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogToMemoryStorage:createdDialog];
+            }
+            
+            if (completion) {
+                completion(response, createdDialog);
+            }
+            
+        } errorBlock:^(QBResponse *response) {
+            
+            if (completion) {
+                completion(response, nil);
+            }
+            
+        }];
+        
+        
+    } else {
+        if (completion) {
+            completion(nil, localDialog);
+        }
+    }
+}
+
+
 - (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent
                                  completion:(void(^)(QBResponse *response, QBChatDialog *createdDialo))completion {
     

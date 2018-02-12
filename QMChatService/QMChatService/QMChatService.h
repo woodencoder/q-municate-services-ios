@@ -151,6 +151,17 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
 - (void)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID
                                    completion:(nullable void(^)(QBResponse *response, QBChatDialog * _Nullable createdDialog))completion;
 
+/**
+ Create p2p dialog
+
+ @param opponentID Opponent ID
+ @param data Dialog custom data
+ @param completion Block with response and created chat dialog instances
+ */
+- (void)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID
+                                   customData:(NSDictionary<NSString *, id>*) data
+                                   completion:(nullable void(^)(QBResponse *response, QBChatDialog * _Nullable createdDialog))completion;
+
 //MARK: - Edit dialog methods
 
 /**
