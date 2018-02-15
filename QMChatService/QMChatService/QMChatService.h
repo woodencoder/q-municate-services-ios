@@ -114,6 +114,15 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
 /**
  *  Retrieve chat dialogs
  *
+ *  @param page Page from the history
+ *  @param completion Block with response dialogs instances
+ */
+- (void)dialogsForPage:(QBResponsePage *)page
+            completion: (void(^)(QBResponse *response, NSArray<QBChatDialog *> *dialogObjects))completion;
+
+/**
+ *  Retrieve chat dialogs
+ *
  *  @param extendedRequest Set of request parameters. http://quickblox.com/developers/SimpleSample-chat_users-ios#Filters
  *  @param completion Block with response dialogs instances
  */
