@@ -118,7 +118,7 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
  *  @param completion Block with response dialogs instances
  */
 - (void)dialogsForPage:(QBResponsePage *)page
-            completion: (void(^)(QBResponse *response, NSArray<QBChatDialog *> *dialogObjects))completion;
+            completion: (void(^)(QBResponse *response, NSArray<QBChatDialog *> * _Nullable dialogObjects))completion;
 
 /**
  *  Retrieve chat dialogs
