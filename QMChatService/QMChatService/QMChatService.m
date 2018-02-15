@@ -630,6 +630,49 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 //MARK: - Dialog history
 
+- (void)dialogsForPage:(QBResponsePage *)page
+            completion: (void(^)(QBResponse *response, NSArray<QBChatDialog *> *dialogObjects))completion {
+    [QBRequest dialogsForPage:page
+              extendedRequest:nil
+                 successBlock:^(QBResponse *response,
+                                NSArray<QBChatDialog *> *dialogs,
+                                NSSet<NSNumber *> *dialogsUsersIDs,
+                                QBResponsePage *page) {
+                     
+                     __weak __typeof(self) weakSelf = self;
+                     
+                     NSArray *memoryStorageDialogs = [weakSelf.dialogsMemoryStorage unsortedDialogs];
+                     NSMutableArray *newDialogs = [dialogs mutableCopy];
+                     NSMutableArray *existentDialogs = [dialogs mutableCopy];
+                     
+                     [newDialogs removeObjectsInArray:memoryStorageDialogs];
+                     [existentDialogs removeObjectsInArray:newDialogs];
+                     
+                     [weakSelf.dialogsMemoryStorage addChatDialogs:dialogs andJoin:weakSelf.isAutoJoinEnabled];
+                     
+                     if (newDialogs.count > 0) {
+                         
+                         if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogsToMemoryStorage:)]) {
+                             [weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogsToMemoryStorage:[newDialogs copy]];
+                         }
+                     }
+                     
+                     if (existentDialogs.count > 0) {
+                         
+                         if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogsInMemoryStorage:)]) {
+                             [weakSelf.multicastDelegate chatService:weakSelf didUpdateChatDialogsInMemoryStorage:[existentDialogs copy]];
+                         }
+                     }
+                    
+                     completion(response, dialogs);
+                     
+                 } errorBlock:^(QBResponse *response) {
+                     
+                     completion(response, nil);
+                     
+                 }];
+}
+
 - (void)allDialogsWithPageLimit:(NSUInteger)limit
                 extendedRequest:(NSDictionary *)extendedRequest
                  iterationBlock:(void(^)(QBResponse *response, NSArray<QBChatDialog *>  *dialogObjects, NSSet<NSNumber *>  *dialogsUsersIDs, BOOL *stop))iterationBlock
