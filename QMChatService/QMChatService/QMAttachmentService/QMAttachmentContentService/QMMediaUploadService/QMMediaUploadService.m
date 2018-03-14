@@ -85,6 +85,7 @@
                                    
                                    attachment.ID = tBlob.UID;
                                    attachment.size = tBlob.size;
+                                   attachment.url = tBlob.publicUrl;
                                    
                                    __strong typeof(weakOperation) strongOperation = weakOperation;
                                    strongOperation.attachmentID = attachment.ID;
